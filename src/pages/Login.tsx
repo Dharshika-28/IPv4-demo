@@ -54,19 +54,31 @@ const Login: React.FC = () => {
 
           <div className="input-group">
             <label htmlFor="password">Password</label>
-            <div className="password-input">
+            <div className="password-input" style={{ display: 'flex', alignItems: 'center' }}>
               <input
                 type={showPassword ? 'text' : 'password'}
                 id="password"
                 {...register('password', { required: 'Password is required' })}
+                style={{ flex: 1, paddingRight: '60px' }} // space for button
               />
-              <button type="button" onClick={() => setShowPassword(prev => !prev)}>
+              <button
+                type="button"
+                onClick={() => setShowPassword(prev => !prev)}
+                style={{
+                  marginLeft: '-50px',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '0.9rem',
+                  color: '#555'
+                }}
+              >
                 {showPassword ? 'Hide' : 'Show'}
               </button>
             </div>
             {errors.password && <span className="field-error">{errors.password.message}</span>}
           </div>
-
+          
           <div className="form-footer justify-end">
             <Link to="/forgot-password">Forgot password?</Link>
           </div>
@@ -75,7 +87,7 @@ const Login: React.FC = () => {
             {loading ? <span className="loader" /> : 'Login'}
           </button>
 
-          <p className="redirect-text">
+          <p className="redirect-txt">
             Don't have an account? <Link to="/register">Register here</Link>
           </p>
         </form>

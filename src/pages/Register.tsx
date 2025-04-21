@@ -11,7 +11,9 @@ interface RegisterFormData {
 }
 
 const Register: React.FC = () => {
-  const { register, handleSubmit, formState: { errors }, watch } = useForm<RegisterFormData>();
+  const { register, handleSubmit, formState: { errors } } = useForm<RegisterFormData>();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const navigate = useNavigate();
@@ -65,23 +67,58 @@ const Register: React.FC = () => {
             {errors.email && <span className="field-error">{errors.email.message}</span>}
           </div>
 
+          
           <div className="input-group">
             <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              {...register('password', { required: 'Password is required' })}
-            />
+            <div className="password-input" style={{ display: 'flex', alignItems: 'center' }}>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                id="password"
+                {...register('password', { required: 'Password is required' })}
+                style={{ flex: 1, paddingRight: '60px' }} // space for button
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(prev => !prev)}
+                style={{
+                  marginLeft: '-50px',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '0.9rem',
+                  color: '#555'
+                }}
+              >
+                {showPassword ? 'Hide' : 'Show'}
+              </button>
+            </div>
             {errors.password && <span className="field-error">{errors.password.message}</span>}
           </div>
 
           <div className="input-group">
             <label htmlFor="confirmPassword">Confirm Password</label>
-            <input
-              type="password"
-              id="confirmPassword"
-              {...register('confirmPassword', { required: 'Please confirm your password' })}
-            />
+            <div className="password-input" style={{ display: 'flex', alignItems: 'center' }}>
+              <input
+                type={showConfirmPassword ? 'text' : 'password'}
+                id="confirmPassword"
+                {...register('confirmPassword', { required: 'Please confirm your password' })}
+                style={{ flex: 1, paddingRight: '60px' }} // space for button
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(prev => !prev)}
+                style={{
+                  marginLeft: '-50px',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '0.9rem',
+                  color: '#555'
+                }}
+              >
+                {showConfirmPassword ? 'Hide' : 'Show'}
+              </button>
+            </div>
             {errors.confirmPassword && <span className="field-error">{errors.confirmPassword.message}</span>}
           </div>
 
