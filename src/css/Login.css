@@ -1,0 +1,169 @@
+:root {
+    --bg: #000;
+    --text: #fff;
+    --border: #333;
+    --hover: #222;
+    --error-bg: #330000;
+    --error-text: #ff4c4c;
+  }
+  
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .login-wrapper {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    background: var(--bg);
+  }
+  
+  .login-card {
+    background-color: #111;
+    padding: 2.5rem;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 0 0 1px var(--border), 0 10px 30px rgba(0, 0, 0, 0.5);
+  }
+  
+  .login-title {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .login-subtitle {
+    font-size: 0.95rem;
+    text-align: center;
+    color: #aaa;
+    margin-bottom: 1.5rem;
+  }
+  
+  .error-banner {
+    background: var(--error-bg);
+    color: var(--error-text);
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+  
+  .input-group label {
+    font-size: 0.95rem;
+    margin-bottom: 0.4rem;
+    display: block;
+  }
+  
+  .input-group input {
+    width: 100%;
+    padding: 0.7rem;
+    border: 1px solid var(--border);
+    background-color: #000;
+    color: var(--text);
+    border-radius: 8px;
+    outline: none;
+    font-size: 1rem;
+  }
+  
+  .input-group input:focus {
+    border-color: var(--text);
+  }
+  
+  .password-input {
+    position: relative;
+  }
+  
+  .password-input button {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    color: var(--text);
+    border: none;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  
+  .field-error {
+    color: var(--error-text);
+    font-size: 0.8rem;
+    margin-top: 0.3rem;
+  }
+  
+  .form-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    color: #bbb;
+  }
+  
+  .form-footer a {
+    color: var(--text);
+    text-decoration: none;
+  }
+  
+  .submit-btn {
+    background: var(--text);
+    color: var(--bg);
+    font-weight: bold;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .submit-btn:hover {
+    background-color: #ddd;
+    color: #000;
+  }
+  
+  .submit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .redirect-text {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #bbb;
+    margin-top: 1rem;
+  }
+  
+  .redirect-text a {
+    color: #fff;
+    text-decoration: underline;
+  }
+  
+  .loader {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #fff;
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+  }
+  
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  

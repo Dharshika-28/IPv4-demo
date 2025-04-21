@@ -1,11 +1,13 @@
 import React from 'react';
-
+import { Link } from 'react-router-dom';
 
 const Home: React.FC = () => {
     return (
-      <div className="min-h-screen flex flex-col bg-white text-black dark:bg-gray-900 dark:text-white transition-colors duration-300">
-        
-      </div>
+        <div>
+            <Link to="/login">Login</Link>
+
+            <Link to="/register">Register</Link>
+        </div>
     );
   };
   
