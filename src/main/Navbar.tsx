@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-const Login: React.FC = () => {
+const Navbar: React.FC = () => {
     return (
       <div className="min-h-screen flex flex-col bg-white text-black dark:bg-gray-900 dark:text-white transition-colors duration-300">
         
@@ -9,4 +9,4 @@ const Login: React.FC = () => {
     );
   };
   
-  export default Login;
+  export default Navbar;
