@@ -5,6 +5,10 @@ import Home from './pages/Home.tsx';
 import Login from './pages/Login.tsx';
 import Register from './pages/Register.tsx';
 import Navbar from './main/Navbar.tsx';
+import AdminDashboard from './admin/AdminDashboard.tsx';
+import AdminRegister from './admin/AdminRegister.tsx';
+import UserTable from './admin/UserTable.tsx';
+
 
 
 const App: React.FC = () => {
@@ -17,8 +21,13 @@ const App: React.FC = () => {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/admindashboard" element={<AdminDashboard />} />
+          <Route path="/adminregister" element={<AdminRegister/>} />
+          <Route path="/usertable" element={<UserTable/>} />
+
         </Routes>
       </main>
+     
       <Footer />
     </div>
   );

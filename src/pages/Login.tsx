@@ -59,7 +59,7 @@ const Login: React.FC = () => {
                 type={showPassword ? 'text' : 'password'}
                 id="password"
                 {...register('password', { required: 'Password is required' })}
-                style={{ flex: 1, paddingRight: '60px' }} // space for button
+                style={{ flex: 1, paddingRight: '60px' }}
               />
               <button
                 type="button"
