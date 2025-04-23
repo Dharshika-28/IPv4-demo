@@ -20,14 +20,29 @@ const Login: React.FC = () => {
     setErrorMsg('');
 
     try {
-      await new Promise(res => setTimeout(res, 1200));
-      if (data.email === 'test@example.com' && data.password === 'password') {
-        navigate('/');
+      const response = await fetch("http://localhost:8080/api/user/login", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        const resData = await response.json();
+
+        // Assuming your backend sends something like: { role: 'ADMIN' | 'USER' }
+        if (resData.role === 'admin') {
+          navigate('/admindashboard'); // go to admin dashboard
+        } else {
+          navigate('/modules'); // go to Modules.tsx for users
+        }
+        
       } else {
-        throw new Error('Invalid email or password');
+        const errorData = await response.json();
+        setErrorMsg(errorData.message || 'Invalid credentials');
       }
     } catch (error) {
-      setErrorMsg((error as Error).message);
+      console.error('Login error:', error);
+      setErrorMsg('Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -36,6 +51,22 @@ const Login: React.FC = () => {
   return (
     <div className="login-wrapper">
       <div className="login-card">
+      <button 
+            style={{
+              position: "absolute",
+              top: "20px",
+              right: "0",
+              background: "none",
+              border: "none",
+              fontSize: "1.5rem",
+              cursor: "pointer",
+              color: "#fff",
+              padding: "0 28px"
+            }}
+            onClick={() => navigate("/")}
+          >
+            ×
+          </button>
         <h2 className="login-title">Welcome Back</h2>
         <p className="login-subtitle">Please login to your account</p>
 
@@ -78,13 +109,13 @@ const Login: React.FC = () => {
             </div>
             {errors.password && <span className="field-error">{errors.password.message}</span>}
           </div>
-          
+
           <div className="form-footer justify-end">
             <Link to="/forgot-password">Forgot password?</Link>
           </div>
 
           <button type="submit" className="submit-btn" disabled={loading}>
-            {loading ? <span className="loader" /> : 'Login'}
+          {loading ? <span className="loader" /> : 'Login'}
           </button>
 
           <p className="redirect-txt">

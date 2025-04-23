@@ -1,12 +1,18 @@
 import React from 'react';
+import '../css/Navbar.css';
 
-
-const Navbar: React.FC = () => {
-    return (
-      <div className="min-h-screen flex flex-col bg-white text-black dark:bg-gray-900 dark:text-white transition-colors duration-300">
-        
+const Navbar = () => {
+  return (
+    <nav className="navbar">
+      <div className="navbar-container">
+        <h1 className="navbar-title">CCNA IPv4 Learning Portal</h1>
+        <div className="navbar-links">
+          <a href="/login" className="navbar-login">Log in</a>
+          <a href="/register" className="navbar-register">Register</a>
+        </div>
       </div>
-    );
-  };
-  
-  export default Navbar;
+    </nav>
+  );
+};
+
+export default Navbar;

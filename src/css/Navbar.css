@@ -1,0 +1,60 @@
+/* Navbar container */
+.navbar {
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 16px 0;
+    width: 100%;
+  }
+  
+  /* Inner container for content alignment */
+  .navbar-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  /* Title styling */
+  .navbar-title {
+    font-size: 1.25rem; /* 20px */
+    font-weight: 700;
+    color: #111827; /* Gray-900 */
+    margin: 0;
+  }
+  
+  /* Links container */
+  .navbar-links {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+  }
+  
+  /* Login link */
+  .navbar-login {
+    color: #4B5563; /* Gray-600 */
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  
+  .navbar-login:hover {
+    color: #111827; /* Gray-900 */
+  }
+  
+  /* Register button */
+  .navbar-register {
+    background-color: #010103; 
+    color: white;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+  }
+  
+  .navbar-register:hover {
+    background-color: #03060e;
+  }
+  

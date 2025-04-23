@@ -8,13 +8,14 @@ import Navbar from './main/Navbar.tsx';
 import AdminDashboard from './admin/AdminDashboard.tsx';
 import AdminRegister from './admin/AdminRegister.tsx';
 import UserTable from './admin/UserTable.tsx';
+import Modules from './pages/Modules.tsx'; // Adjust this import based on your file structure
 
 
 
 const App: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col bg-white text-black dark:bg-gray-900 dark:text-white transition-colors duration-300">
-      <Navbar />
+      {/* <Navbar /> */}
 
       <main className="flex-grow p-4">
         <Routes>
@@ -24,10 +25,9 @@ const App: React.FC = () => {
           <Route path="/admindashboard" element={<AdminDashboard />} />
           <Route path="/adminregister" element={<AdminRegister/>} />
           <Route path="/usertable" element={<UserTable/>} />
-
+          <Route path="/modules" element={<Modules />} /> {/* Adjust this path as needed */}
         </Routes>
       </main>
-     
       <Footer />
     </div>
   );

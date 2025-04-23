@@ -27,6 +27,7 @@ body {
 .login-card {
   background-color: #111;
   padding: 2.5rem;
+  position: relative; 
   border-radius: 16px;
   width: 100%;
   max-width: 420px;
