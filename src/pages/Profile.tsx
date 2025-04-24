@@ -38,19 +38,19 @@ const ProfileSummary: React.FC<ProfileSummaryProps> = ({
 
       {/* Center Details */}
       <div className="details-container">
-        <Typography variant="h6" style={{ color: 'black' }}>
+        <Typography variant="h6" style={{ color: 'white' }}>
           {userName}
         </Typography>
-        <Typography style={{ color: 'black' }}>
+        <Typography style={{ color: 'white' }}>
           <strong>Course:</strong> CCNA IPv4 Addressing
         </Typography>
-        <Typography style={{ color: 'black' }}>
+        <Typography style={{ color: 'white' }}>
           <strong>Sections Completed:</strong> {completedSections} / {totalSections}
         </Typography>
-        <Typography style={{ color: 'black' }}>
+        <Typography style={{ color: 'white' }}>
           <strong>Last Completed:</strong> {lastSection}
         </Typography>
-        <Typography style={{ color: 'black' }}>
+        <Typography style={{ color: 'white' }}>
           <strong>Badge:</strong> {getBadge(progress)}
         </Typography>
       </div>
@@ -76,7 +76,7 @@ const ProfileSummary: React.FC<ProfileSummaryProps> = ({
             justifyContent="center"
           >
             
-            <Typography variant="caption" style={{ color: 'black' }}>
+            <Typography variant="caption" style={{ color: 'white' }}>
               {`${progress}%`}
             </Typography>
           </Box>
