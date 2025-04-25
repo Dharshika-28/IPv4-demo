@@ -18,28 +18,40 @@ const Login: React.FC = () => {
   const onSubmit: SubmitHandler<LoginFormData> = async (data) => {
     setLoading(true);
     setErrorMsg('');
-
+  
     try {
       const response = await fetch("http://localhost:8080/api/user/login", {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
-
+  
       if (response.ok) {
         const resData = await response.json();
-
-        // Assuming your backend sends something like: { role: 'ADMIN' | 'USER' }
+  
+        // Assuming your backend returns:
+        // { token: string, username: string, role: 'admin' | 'user' }
+  
+        // Save user data to localStorage
+        localStorage.setItem('token', resData.token);
+        localStorage.setItem('username', resData.username);
+        localStorage.setItem('role', resData.role);
+  
+        // Log for debug
+        console.log("Login success:", resData);
+  
+        // Navigate based on role
         if (resData.role === 'admin') {
-          navigate('/admindashboard'); // go to admin dashboard
+          navigate('/admindashboard');
         } else {
-          navigate('/modules'); // go to Modules.tsx for users
+          navigate('/modules');
         }
         
       } else {
         const errorData = await response.json();
         setErrorMsg(errorData.message || 'Invalid credentials');
       }
+  
     } catch (error) {
       console.error('Login error:', error);
       setErrorMsg('Something went wrong. Please try again.');
@@ -47,7 +59,7 @@ const Login: React.FC = () => {
       setLoading(false);
     }
   };
-
+  
   return (
     <div className="login-wrapper">
       <div className="login-card">

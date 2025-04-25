@@ -1,20 +1,19 @@
+
 'use client';
 
 import React from 'react';
 import '../css/Home.css'; // 👈 Import CSS here
 import Navbar from '../main/Navbar.tsx'; // No need to add .tsx
-import ModulePage from './Modules.tsx';
-import Footer from '../main/Footer.tsx';
+import ModulePage from './Modulepage.tsx';
 
 const Home = () => {
   return (
     <div className="home-container">
       <Navbar />
-      {/* <ModulePage /> Include the ModulePage component here */}
       <header className="home-header">
-        <h1 className="home-title">Welcome to the Learning Portal</h1>
+        <h1 className="home-title">Interactive learning</h1>
         <p className="home-subtitle">
-          Your self-paced learning experience for IPv4 addressing and more!
+          Practice with  real-world Scenarios  and get immediate feedback on your progress.
         </p>
       </header>
 
@@ -49,51 +48,40 @@ const Home = () => {
             </p>
           </div>
           <div className="feature-card">
-            <h3 className="feature-card-title">Progress Tracking</h3>
+            <h3 className="feature-card-title">Comprehensive Content </h3>
             <p className="feature-card-desc">
-              Stay motivated with detailed progress tracking of your learning journey.
+              Cover all essential Ipv4 topic including subnetting, CIDR, VLSM and route Summarization.
             </p>
           </div>
           <div className="feature-card">
-            <h3 className="feature-card-title">Admin Dashboard</h3>
+            <h3 className="feature-card-title">Self-paced Modules</h3>
             <p className="feature-card-desc">
-              Manage users, content, and quizzes with an easy-to-use admin interface.
+              Learn at your own pace with structured modules that fit your schedule and clear learning objectices.
             </p>
           </div>
           <div className="feature-card">
-            <h3 className="feature-card-title">Learning Resources</h3>
+            <h3 className="feature-card-title">Practice Exercises</h3>
             <p className="feature-card-desc">
-              Access a variety of resources and materials to help you succeed.
+              Reinforce your learning with hands-on exercises, real-world scenarios and quizzes.
             </p>
           </div>
           <div className="feature-card">
-            <h3 className="feature-card-title">Live Support</h3>
+            <h3 className="feature-card-title">Progress Tracking </h3>
             <p className="feature-card-desc">
-              Get support from experts during your learning journey.
+              Monitor your progress and identify areas for improvement with detailed analytics.
             </p>
           </div>
           <div className="feature-card">
-            <h3 className="feature-card-title">Community</h3>
+            <h3 className="feature-card-title">CCNA Aligned</h3>
             <p className="feature-card-desc">
-              Join a community of learners to share knowledge and experiences.
+              Content is aligned with CCNA certification objectives, ensuring you are well-prepared for the exam.
             </p>
           </div>
-          <div className="feature-card">
-            <h3 className="feature-card-title">Certification</h3>
-            <p className="feature-card-desc">
-              Earn certificates after completing courses and quizzes.
-            </p>
-          </div>
-          <div className="feature-card">
-            <h3 className="feature-card-title">Mobile Friendly</h3>
-            <p className="feature-card-desc">
-              Learn on the go with a mobile-responsive design.
-            </p>
-          </div>
+         
         </div>
       </section>
     </div>
   );
 };
 
-export default Home;
+export default Home
