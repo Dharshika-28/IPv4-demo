@@ -159,3 +159,19 @@
     color: red;
   }
   
+
+  .view-details-button {
+    background-color: #007bff; /* Blue background */
+    color: white;              /* White text */
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  }
+  
+  .view-details-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+  }
+  

@@ -334,7 +334,7 @@ const ModulePage: React.FC<ModulePageProps> = ({ username }) => {
         explanation:
           "Trunk ports allow traffic from multiple VLANs to traverse a single link between switches or routers.",
       },
-      "Module 3 Q9": {
+      "Module 3 Q9": {  
         question: "What is the purpose of Port Security?",
         correctAnswer: "C",
         explanation:
@@ -1129,7 +1129,7 @@ const ModulePage: React.FC<ModulePageProps> = ({ username }) => {
                 )}
 
                 <button
-                  onClick={() => markAsComplete("Module_1", "Module 1 Quiz")}
+                  onClick={() => markAsComplete("MODULE_1", "Module 1 Quiz")}
                   className="next-btn"
                 >
                   Go to Next Module
@@ -1581,7 +1581,7 @@ const ModulePage: React.FC<ModulePageProps> = ({ username }) => {
                 )}
 
                 <button
-                  onClick={() => markAsComplete("Module_2", "Module 2 Quiz")}
+                  onClick={() => markAsComplete("MODULE_2", "Module 2 Quiz")}
                   className="next-btn"
                 >
                   Go to Next Module
@@ -2057,7 +2057,7 @@ const ModulePage: React.FC<ModulePageProps> = ({ username }) => {
                 )}
 
                 <button
-                  onClick={() => markAsComplete("Module_3", "Module 3 Quiz")}
+                  onClick={() => markAsComplete("MODULE_3", "Module 3 Quiz")}
                   className="next-btn"
                 >
                   Go to Next Module

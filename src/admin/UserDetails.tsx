@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import "./AdminDashboard.css";
 import MenuBar from "../styles/MenuBar.tsx";
-import PersonIcon from '@mui/icons-material/Person';
-import SearchIcon from '@mui/icons-material/Search';
+import PersonIcon from "@mui/icons-material/Person";
+import SearchIcon from "@mui/icons-material/Search";
+import { useNavigate } from "react-router-dom";
 
 type LoginEntry = {
   time: string;
@@ -24,17 +24,17 @@ type User = {
   courseProgress?: SectionProgress[];
 };
 
-type SortKey = "name" | "email" | "lastLogin" | "progress" | "totalLogins" | null;
+type SortKey = "name" | "email" | "progress" | "totalLogins" | null;
 type SortDirection = "asc" | "desc";
 
 const UserDetails: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch("http://localhost:8080/api/progress/All")
@@ -43,36 +43,21 @@ const UserDetails: React.FC = () => {
         return res.json();
       })
       .then((data) => {
-        console.log("Fetched users data:", data);
         setUsers(data);
         setLoading(false);
       })
       .catch((err) => {
-        console.error("Fetch error:", err);
         setError(err.message);
         setLoading(false);
       });
   }, []);
 
-  const toggleExpand = (index: number) => {
-    setExpandedIndex(index === expandedIndex ? null : index);
-  };
-
-  const getLastLogin = (loginHistory: LoginEntry[] = []) => {
-    if (loginHistory.length === 0) return "No logins";
-    const lastLogin = loginHistory.reduce((latest, entry) =>
-      new Date(entry.time) > new Date(latest.time) ? entry : latest
-    );
-    const date = new Date(lastLogin.time);
-    return `${date.toLocaleDateString()} ${date.toLocaleTimeString()} from ${lastLogin.location} (${lastLogin.ip})`;
-  };
-
-  const getUserHighestProgress = (progress: SectionProgress[] = []) => {
+  const getHighestProgress = (progress: SectionProgress[] = []) => {
     if (!progress.length) return 0;
-    return Math.max(...progress.map(p => p.progressPercentage));
+    return Math.max(...progress.map((p) => p.progressPercentage));
   };
 
-  // Filter users by search term (name or email)
+  // Filter users based on search term
   const filteredUsers = users.filter((user) => {
     const name = user.name || "";
     const email = user.email || "";
@@ -82,7 +67,7 @@ const UserDetails: React.FC = () => {
     );
   });
 
-  // Sort users based on current sort key and direction
+  // Sort users based on sortKey and direction
   const sortedUsers = [...filteredUsers].sort((a, b) => {
     if (!sortKey) return 0;
 
@@ -97,20 +82,9 @@ const UserDetails: React.FC = () => {
         aValue = (a.email || "").toLowerCase();
         bValue = (b.email || "").toLowerCase();
         break;
-      case "lastLogin": {
-        const aLast = (a.loginHistory ?? []).length
-          ? new Date((a.loginHistory ?? []).reduce((latest, e) => new Date(e.time) > new Date(latest.time) ? e : latest).time)
-          : new Date(0);
-        const bLast = (b.loginHistory ?? []).length
-          ? new Date((b.loginHistory ?? []).reduce((latest, e) => new Date(e.time) > new Date(latest.time) ? e : latest).time)
-          : new Date(0);
-        aValue = aLast.getTime();
-        bValue = bLast.getTime();
-        break;
-      }
       case "progress":
-        aValue = getUserHighestProgress(a.courseProgress ?? []);
-        bValue = getUserHighestProgress(b.courseProgress ?? []);
+        aValue = getHighestProgress(a.courseProgress ?? []);
+        bValue = getHighestProgress(b.courseProgress ?? []);
         break;
       case "totalLogins":
         aValue = (a.loginHistory ?? []).length;
@@ -141,192 +115,199 @@ const UserDetails: React.FC = () => {
   };
 
   return (
-    <div>
+    
+    <div      style={{
+      backgroundColor: "#fff",
+      color: "#000",
+      minHeight: "100vh",
+      fontFamily: "Arial, sans-serif",}}
+      >
       <MenuBar />
-      <div className="admin-dashboard">
-        {loading && <p>Loading...</p>}
-        {error && <p className="error-text">{error}</p>}
+      <h1>User Details</h1>
 
-        {!loading && !error && (
-          <>
-            <div
-              className="search-wrapper"
-              style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}
-            >
-              <input
-                type="text"
-                placeholder="Search by name or email..."
-                className="search-input"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              <SearchIcon sx={{ ml: 2, fontSize: "30px" }} />
-            </div>
+      {loading && <p>Loading...</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
 
-            <div className="table-wrapper">
-              <table className="user-table">
-                <thead>
-                  <tr>
-                    <th
-                      onClick={() => handleSort("name")}
-                      style={{ textAlign: "left", cursor: "pointer" }}
+      {!loading && !error && (
+        <>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              marginBottom: 10,
+              border: "1px solid #ddd",
+              borderRadius: 8,
+              padding: "4px 8px",
+              maxWidth: 400,
+              backgroundColor: "#f9f9f9",
+            }}
+          >
+            <SearchIcon style={{ marginRight: 8, color: "#666" }} />
+            <input
+              type="text"
+              placeholder="Search by name or email..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              style={{
+                flexGrow: 1,
+                padding: 8,
+                fontSize: 16,
+                border: "none",
+                outline: "none",
+                backgroundColor: "transparent",
+                color: "#000",
+              }}
+            />
+          </div>
+
+          <table
+            style={{
+              width: "100%",
+              borderCollapse: "collapse",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+              marginTop: "20px ",
+            }}
+          >
+            <thead style={{ backgroundColor: "#fff", color: "#000" }}>
+              <tr>
+                <th
+                  onClick={() => handleSort("name")}
+                  style={{
+                    cursor: "pointer",
+                    padding: 12,
+                    textAlign: "left",
+                    userSelect: "none",
+                  }}
+                >
+                  User's Name{renderSortArrow("name")}
+                </th>
+                <th
+                  onClick={() => handleSort("email")}
+                  style={{
+                    cursor: "pointer",
+                    padding: 12,
+                    textAlign: "left",
+                    userSelect: "none",
+                  }}
+                >
+                  User's Email{renderSortArrow("email")}
+                </th>
+                <th
+                  onClick={() => handleSort("progress")}
+                  style={{
+                    cursor: "pointer",
+                    padding: 12,
+                    textAlign: "center",
+                    userSelect: "none",
+                  }}
+                >
+                  Course Progress{renderSortArrow("progress")}
+                </th>
+                <th
+                  onClick={() => handleSort("totalLogins")}
+                  style={{
+                    cursor: "pointer",
+                    padding: 12,
+                    textAlign: "center",
+                    userSelect: "none",
+                  }}
+                >
+                  Total Logins{renderSortArrow("totalLogins")}
+                </th>
+                <th style={{ padding: 12, textAlign: "center" }}>Details</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sortedUsers.length === 0 ? (
+                <tr>
+                  <td colSpan={5} style={{ textAlign: "center", padding: 20 }}>
+                    No users found.
+                  </td>
+                </tr>
+              ) : (
+                sortedUsers.map((user, idx) => {
+                  const highestProgress = getHighestProgress(user.courseProgress ?? []).toFixed(1);
+                  const progressBarColor = highestProgress === "100.0" ? "#4caf50" : "#2196f3";
+
+                  return (
+                    <tr
+                      key={user.email || idx}
+                      style={{
+                        borderBottom: "1px solid #ddd",
+                        transition: "background-color 0.2s ease",
+                      }}
+                      onMouseEnter={(e) => {
+                        (e.currentTarget.style.backgroundColor = "#f0f0f0");
+                      }}
+                      onMouseLeave={(e) => {
+                        (e.currentTarget.style.backgroundColor = "transparent");
+                      }}
                     >
-                      User's Name{renderSortArrow("name")}
-                    </th>
-                    <th
-                      onClick={() => handleSort("email")}
-                      style={{ textAlign: "left", cursor: "pointer" }}
-                    >
-                      User's Email{renderSortArrow("email")}
-                    </th>
-                    <th onClick={() => handleSort("progress")} style={{ cursor: "pointer" }}>
-                      Course Progress{renderSortArrow("progress")}
-                    </th>
-                    <th onClick={() => handleSort("totalLogins")} style={{ cursor: "pointer" }}>
-                      Total Logins{renderSortArrow("totalLogins")}
-                    </th>
-                    <th>Details</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {sortedUsers.length === 0 && (
-                    <tr>
-                      <td colSpan={6} className="no-users">
-                        No users found.
+                      <td style={{ padding: 12, display: "flex", alignItems: "center" }}>
+                        <PersonIcon style={{ marginRight: 8, color: "#555" }} />
+                        {user.name || "Unknown"}
+                      </td>
+                      <td style={{ padding: 12 }}>{user.email || "N/A"}</td>
+                      <td style={{ padding: 12, textAlign: "center" }}>
+                        <div
+                          style={{
+                            backgroundColor: "#e0e0e0",
+                            borderRadius: 10,
+                            height: 24,
+                            width: 200,
+                            margin: "0 auto",
+                            overflow: "hidden",
+                            boxShadow: "inset 0 1px 3px rgba(0,0,0,0.2)",
+                          }}
+                        >
+                          <div
+                            style={{
+                              width: `${highestProgress}%`,
+                              height: "100%",
+                              backgroundColor: progressBarColor,
+                              color: "#fff",
+                              fontWeight: "bold",
+                              textAlign: "center",
+                              lineHeight: "24px",
+                              transition: "width 0.5s ease",
+                            }}
+                          >
+                            {highestProgress}%
+                          </div>
+                        </div>
+                      </td>
+                      <td style={{ padding: 12, textAlign: "center" }}>
+                        {(user.loginHistory ?? []).length}
+                      </td>
+                      <td style={{ padding: 12, textAlign: "center" }}>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (user.email) {
+                              navigate(`/courseprogressdetails/${encodeURIComponent(user.email)}`);
+                            }
+                          }}
+                          style={{
+                            backgroundColor: "#1976d2",
+                            color: "white",
+                            border: "none",
+                            padding: "6px 14px",
+                            borderRadius: 4,
+                            cursor: "pointer",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          View
+                        </button>
                       </td>
                     </tr>
-                  )}
-                  {sortedUsers.map((user, index) => {
-                    const highestProgress = getUserHighestProgress(user.courseProgress ?? []).toFixed(1);
-
-                    return (
-                      <React.Fragment key={user.email || index}>
-                        <tr
-                          onClick={() => toggleExpand(index)}
-                          className="user-row"
-                          style={{ cursor: "pointer" }}
-                        >
-                          <td style={{ textAlign: "left" }}>
-                            <PersonIcon sx={{ mr: "10px" }} />
-                            {user.name || "Unknown"}
-                          </td>
-                          <td style={{ textAlign: "left" }}>{user.email || "N/A"}</td>
-                          <td>
-                            <div className="progress-wrapper">
-                              <div
-                                className={`progress-bar ${highestProgress === "100.0" ? "green" : "blue"}`}
-                                style={{ width: `${highestProgress}%` }}
-                              >
-                                {highestProgress}%
-                              </div>
-                            </div>
-                          </td>
-                          <td>{(user.loginHistory ?? []).length}</td>
-                          <td>
-                            <button className="view-button">
-                              {expandedIndex === index ? "Hide" : "View"}
-                            </button>
-                          </td>
-                        </tr>
-                        {expandedIndex === index && (
-                          <tr>
-                            <td colSpan={6}>
-                              <div className="expand-section" style={{ display: "flex", gap: "2rem" }}>
-                                {/* Login History Table */}
-                                <div style={{ flex: 1 }}>
-                                  <h4>Login History</h4>
-                                  {(user.loginHistory && user.loginHistory.length > 0) ? (
-                                    <table
-                                      className="inner-table"
-                                      style={{ width: "100%", borderCollapse: "collapse" }}
-                                    >
-                                      <thead>
-                                        <tr>
-                                          <th style={{ border: "1px solid #ddd", padding: "8px" }}>Date</th>
-                                          <th style={{ border: "1px solid #ddd", padding: "8px" }}>Time</th>
-                                          <th style={{ border: "1px solid #ddd", padding: "8px" }}>IP Address</th>
-                                          <th style={{ border: "1px solid #ddd", padding: "8px" }}>Location</th>
-                                        </tr>
-                                      </thead>
-                                      <tbody>
-                                        {user.loginHistory.map((login, i) => {
-                                          const dateObj = new Date(login.time);
-                                          return (
-                                            <tr key={i}>
-                                              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                                                {dateObj.toLocaleDateString()}
-                                              </td>
-                                              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                                                {dateObj.toLocaleTimeString()}
-                                              </td>
-                                              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                                                {login.ip}
-                                              </td>
-                                              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                                                {login.location}
-                                              </td>
-                                            </tr>
-                                          );
-                                        })}
-                                      </tbody>
-                                    </table>
-                                  ) : (
-                                    <p>No login history available.</p>
-                                  )}
-                                </div>
-
-                                {/* Course Progress Table */}
-                                <div style={{ flex: 1 }}>
-                                  <h4>Course Progress</h4>
-                                  {(user.courseProgress && user.courseProgress.length > 0) ? (
-                                    <table
-                                      className="inner-table"
-                                      style={{ width: "100%", borderCollapse: "collapse" }}
-                                    >
-                                      <thead>
-                                        <tr>
-                                          <th style={{ border: "1px solid #ddd", padding: "8px" }}>Module</th>
-                                          <th style={{ border: "1px solid #ddd", padding: "8px" }}>Section</th>
-                                          <th style={{ border: "1px solid #ddd", padding: "8px" }}>Completed</th>
-                                          <th style={{ border: "1px solid #ddd", padding: "8px" }}>Progress %</th>
-                                        </tr>
-                                      </thead>
-                                      <tbody>
-                                        {user.courseProgress.map((progress, i) => (
-                                          <tr key={i}>
-                                            <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                                              {progress.moduleName}
-                                            </td>
-                                            <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                                              {progress.sectionName}
-                                            </td>
-                                            <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                                              {progress.completed ? "Yes" : "No"}
-                                            </td>
-                                            <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                                              {progress.progressPercentage}%
-                                            </td>
-                                          </tr>
-                                        ))}
-                                      </tbody>
-                                    </table>
-                                  ) : (
-                                    <p>No course progress available.</p>
-                                  )}
-                                </div>
-                              </div>
-                            </td>
-                          </tr>
-                        )}
-                      </React.Fragment>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          </>
-        )}
-      </div>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </>
+      )}
     </div>
   );
 };
