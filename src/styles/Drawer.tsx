@@ -29,8 +29,8 @@ export default function Drawers() {
   const navLinks = [
     { text: "Home", icon: <HomeIcon />, path: "/" },
     { text: "DashBoard", icon: <SpaceDashboardIcon />, path: "/admindashboard" },
-    { text: "User Details", icon: <PeopleIcon />, path: "/usertable" },
-    { text: "Course Progress", icon: <LibraryBooksIcon />, path: "/progress" },
+    { text: "User Details", icon: <PeopleIcon />, path: "/userDetails" },
+    { text: "Course Progress", icon: <LibraryBooksIcon />, path: "/courseprogress" },
     { text: "Admin Register", icon: <AppRegistrationIcon />, path: "/adminregister" },
   ];
 

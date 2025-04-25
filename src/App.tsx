@@ -6,8 +6,9 @@ import Login from './pages/Login.tsx';
 import Register from './pages/Register.tsx';
 import AdminDashboard from './admin/AdminDashboard.tsx';
 import AdminRegister from './admin/AdminRegister.tsx';
-import UserTable from './admin/UserTable.tsx';
+import UserDetails from './admin/UserDetails.tsx';
 import ModulePage from './pages/Modulepage.tsx';
+import CourseProgressDetails from './admin/CourseProgressDetails.tsx';
 
 
 
@@ -23,8 +24,9 @@ const App: React.FC = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/admindashboard" element={<AdminDashboard />} />
           <Route path="/adminregister" element={<AdminRegister/>} />
-          <Route path="/usertable" element={<UserTable/>} />
-          <Route path="/modules" element={<ModulePage />} /> {/* Adjust this path as needed */}
+          <Route path="/userDetails" element={<UserDetails/>} />
+          <Route path="/courseprogress" element={<CourseProgressDetails/>} />
+          <Route path="/modules" element={<ModulePage />} /> 
         </Routes>
       </main>
       <Footer />
