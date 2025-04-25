@@ -14,6 +14,7 @@ import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import Drawers from './Drawer.tsx';
+import { Link } from 'react-router-dom';
 
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
@@ -72,9 +73,9 @@ export default function MenuBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem  sx={{ ml: 2, mr:2 }} onClick={handleMenuClose}>Add Admin</MenuItem>
+      <Link to="/adminregister" style={{textDecoration:'none', color:'black'}} ><MenuItem  sx={{ ml: 2, mr:2 }} onClick={handleMenuClose}>Add Admin</MenuItem></Link>
       <hr />
-      <MenuItem  sx={{ ml: 2, mr:2 }} onClick={handleMenuClose}>Logout</MenuItem>
+      <Link to="/" style={{textDecoration:'none', color:'black'}} ><MenuItem  sx={{ ml: 2, mr:2 }} onClick={handleMenuClose}>Logout</MenuItem></Link>
     </Menu>
   );
 
