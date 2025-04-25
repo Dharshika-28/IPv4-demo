@@ -40,7 +40,7 @@ const AdminDashboard: React.FC = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/admin/All")
+    fetch(`http://localhost:8080/api/progress/All`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch users");
         return res.json();
