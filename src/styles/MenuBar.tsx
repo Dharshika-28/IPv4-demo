@@ -72,7 +72,7 @@ export default function MenuBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem  sx={{ ml: 2, mr:2 }} onClick={handleMenuClose}>Profile</MenuItem>
+      <MenuItem  sx={{ ml: 2, mr:2 }} onClick={handleMenuClose}>Add Admin</MenuItem>
       <hr />
       <MenuItem  sx={{ ml: 2, mr:2 }} onClick={handleMenuClose}>Logout</MenuItem>
     </Menu>

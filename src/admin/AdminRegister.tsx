@@ -84,7 +84,7 @@ const AdminRegister: React.FC = () => {
           }}
         >
           <h2 style={{ color: 'black', marginBottom: '10px', textAlign: 'center' }}>
-            Create Account
+            Create Account for Admin
           </h2>
           <p style={{ color: 'black', textAlign: 'center', marginBottom: '20px' }}>
             Join us to explore more!
