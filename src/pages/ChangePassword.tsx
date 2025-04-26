@@ -1,80 +1,102 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const ResetPassword: React.FC = () => {
-  const [email, setEmail] = useState('');
+const ChangePassword: React.FC = () => {
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const email = localStorage.getItem("resetEmail");
 
-  const handleReset = async (e: React.FormEvent) => {
+  useEffect(() => {
+    if (!email) {
+      setMessage("Session expired. Try again.");
+      setTimeout(() => navigate("/reset-password"), 2000);
+    }
+  }, [email, navigate]);
+
+  const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!email) {
-      setMessage("Please enter your email.");
+    if (newPassword !== confirmPassword) {
+      setMessage("Passwords do not match.");
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      setMessage("Password must be at least 6 characters.");
       return;
     }
 
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:8080/api/user/forgot-password', {
+      const response = await fetch('http://localhost:8080/api/user/change-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, newPassword }),
       });
 
+      const data = await response.json();
+
       if (response.ok) {
-        localStorage.setItem("resetEmail", email); // Store email for ChangePassword
-        setMessage("Verifying");
-        setTimeout(() => navigate("/change-password"), 2000);
+        setMessage(data.message || "Password updated!");
+        setTimeout(() => {
+          localStorage.removeItem("resetEmail");
+          navigate("/login");
+        }, 2000);
       } else {
-        const errorData = await response.json();
-        setMessage(errorData.message || "Something went wrong.");
+        setMessage(data.message || "Something went wrong.");
       }
     } catch (error) {
-      console.error("Error:", error);
-      setMessage("Failed to send reset link. Please try again later.");
+      console.error(error);
+      setMessage("Error occurred. Try again.");
     } finally {
       setIsLoading(false);
     }
-
-    setTimeout(() => {
-      setMessage('');
-      setEmail('');
-    }, 3000);
   };
 
   return (
     <div style={styles.wrapper}>
       <div style={styles.card}>
-        <button style={styles.closeBtn} onClick={() => navigate("/login")}>×</button>
+      <button style={styles.closeBtn} onClick={() => navigate("/login")}>×</button>
 
-        <h2 style={styles.title}>Reset Your Password</h2>
-        <p style={styles.subtitle}>Enter your registered email and we’ll send you reset instructions.</p>
+        <h2 style={styles.title}>Change Password</h2>
 
         {message && <div style={styles.message}>{message}</div>}
 
-        <form onSubmit={handleReset} style={styles.form}>
+        <form onSubmit={handleChangePassword} style={styles.form}>
           <div style={styles.inputGroup}>
-            <label htmlFor="email" style={styles.label}>Email</label>
+            <label style={styles.label}>New Password</label>
             <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
               required
               style={styles.input}
             />
           </div>
-          <button type="submit" style={styles.button} disabled={isLoading}>
-            {isLoading ? 'Sending...' : 'Send Reset Link'}
+          <div style={styles.inputGroup}>
+            <label style={styles.label}>Confirm Password</label>
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+              style={styles.input}
+            />
+          </div>
+          <button type="submit" disabled={isLoading} style={styles.button}>
+            {isLoading ? "Updating..." : "Update Password"}
           </button>
         </form>
       </div>
     </div>
   );
 };
+
+export default ChangePassword;
 
 const styles: { [key: string]: React.CSSProperties } = {
   wrapper: {
@@ -87,6 +109,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     color: '#fff',
   },
   card: {
+    position: 'relative', // 🔥 THIS is the fix!
     background: '#111',
     borderRadius: '20px',
     padding: '40px 30px',
@@ -94,8 +117,8 @@ const styles: { [key: string]: React.CSSProperties } = {
     width: '100%',
     textAlign: 'center',
     boxShadow: '0 10px 30px rgba(0,0,0,0.7)',
-    position: 'relative',
   },
+  
   closeBtn: {
     position: 'absolute',
     top: '15px',
@@ -109,11 +132,6 @@ const styles: { [key: string]: React.CSSProperties } = {
   title: {
     fontSize: '2rem',
     marginBottom: '20px',
-  },
-  subtitle: {
-    fontSize: '0.95rem',
-    marginBottom: '25px',
-    color: '#aaa',
   },
   message: {
     backgroundColor: '#222',
@@ -138,7 +156,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     display: 'block',
   },
   input: {
-    width: '93%',
+    width: '100%',
     padding: '12px 15px',
     borderRadius: '10px',
     border: '1px solid #333',
@@ -158,5 +176,3 @@ const styles: { [key: string]: React.CSSProperties } = {
     transition: '0.3s ease',
   },
 };
-
-export default ResetPassword;

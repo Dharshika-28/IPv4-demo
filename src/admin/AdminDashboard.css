@@ -175,3 +175,10 @@
     background-color: #0056b3; /* Darker blue on hover */
   }
   
+  .card .subtext {
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: 4px;
+    display: block;
+  }
+  

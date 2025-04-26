@@ -116,13 +116,16 @@ const UserDetails: React.FC = () => {
 
   return (
     
+    <div>
+      <MenuBar />
     <div      style={{
       backgroundColor: "#fff",
       color: "#000",
+      padding:"30px",
       minHeight: "100vh",
       fontFamily: "Arial, sans-serif",}}
       >
-      <MenuBar />
+
       <h1>User Details</h1>
 
       {loading && <p>Loading...</p>}
@@ -308,6 +311,7 @@ const UserDetails: React.FC = () => {
           </table>
         </>
       )}
+    </div>
     </div>
   );
 };

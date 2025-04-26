@@ -3,11 +3,18 @@ import "../css/ModulePage.css";
 import { FaCheckCircle, FaRegCircle } from "react-icons/fa";
 import ProfileSummary from "../pages/Profile.tsx";
 import axios from "axios";
+import html2pdf from "html2pdf.js";
 
 
 interface ModulePageProps {
   username: string;
   
+}
+
+declare global {
+  interface Window {
+    html2pdf: any;
+  }
 }
 
 const ModulePage: React.FC<ModulePageProps> = ({ username }) => {
@@ -86,6 +93,8 @@ const ModulePage: React.FC<ModulePageProps> = ({ username }) => {
       "Module 3/2 Quiz",
     ],
     FINAL: ["Final Quiz"],
+    CERTIFICATE: ["Certificate"]
+
   };
 
 
@@ -439,8 +448,11 @@ const ModulePage: React.FC<ModulePageProps> = ({ username }) => {
       </div>
     );
   };
-  const handleFinalQuizSubmit = () => {
-    console.log("Final Quiz Submit button clicked"); // Debugging log
+ 
+ 
+  const handleFinalQuizSubmit = async () => {
+    console.log("Final Quiz Submit button clicked");
+  
     const correctAnswers = {
       "Final Quiz Q1": "B",
       "Final Quiz Q2": "B",
@@ -453,33 +465,64 @@ const ModulePage: React.FC<ModulePageProps> = ({ username }) => {
       "Final Quiz Q9": "B",
       "Final Quiz Q10": "C",
     };
-
-    // Initialize score
+  
     let score = 0;
-
-    // Calculate the score by comparing quizAnswers with correctAnswers
+  
     Object.keys(correctAnswers).forEach((key) => {
       if (quizAnswers[key] && quizAnswers[key] === correctAnswers[key]) {
         score++;
       }
     });
-
-    // Calculate the percentage score
+  
     const totalQuestions = Object.keys(correctAnswers).length;
-    const percent = Math.round((score / totalQuestions) * 100); // Round to nearest integer
-
-    // Update the state with the calculated score
+    const percent = Math.round((score / totalQuestions) * 100);
+    localStorage.setItem("finalQuizScore", percent.toString());
+  
     setFinalQuizScore(percent);
     setFinalQuizSubmitted(true);
-
-    // Generate feedback for each question
+  
     const feedback: Record<string, boolean> = {};
     Object.keys(correctAnswers).forEach((key) => {
       feedback[key] = quizAnswers[key] === correctAnswers[key];
     });
     setQuizFeedback(feedback);
-  };
+  
+    saveProgressToBackend("FINAL", "Final Quiz", true, percent);
 
+try {
+  const username = localStorage.getItem('username'); // ✅ Only username now
+  if (!username) {
+    throw new Error("Username not found in localStorage");
+  }
+
+    if (percent > 60) {  // <-- Only send if score is above 60
+      await fetch('http://localhost:8080/api/progress/final-quiz', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          username: username,
+          score: percent,
+          completed: true,
+        }),
+      });
+
+      console.log("Final quiz result saved to backend");
+    } else {
+      console.log("Score below 60 - final quiz result not saved");
+    }
+
+    console.log("Fetched username:", username);
+
+  } catch (error) {
+    console.error("Error saving final quiz result:", error);
+  }
+  
+};
+  
+  
   const handlemodule1QuizSubmit = () => {
     console.log("Module 1 Quiz Submit button clicked"); // Debugging log
     const correctAnswers = {
@@ -2481,7 +2524,7 @@ const ModulePage: React.FC<ModulePageProps> = ({ username }) => {
                   )}
                   <button
                     onClick={() =>
-                      markAsComplete("Module_3", "Module 3/2 Quiz")
+                      markAsComplete("MODULE_3", "Module 3/2 Quiz")
                     }
                     className="next-btn"
                   >
@@ -2536,6 +2579,8 @@ const ModulePage: React.FC<ModulePageProps> = ({ username }) => {
                 name="q1"
                 onChange={() => handleAnswerChange("Final Quiz Q1", opt)}
                 checked={quizAnswers["Final Quiz Q1"] === opt}
+                disabled={finalQuizSubmitted}
+
               />
               {opt}) {["16 bits", "32 bits", "64 bits"][i]}
             </label>
@@ -2561,6 +2606,8 @@ const ModulePage: React.FC<ModulePageProps> = ({ username }) => {
                 name="q2"
                 onChange={() => handleAnswerChange("Final Quiz Q2", opt)}
                 checked={quizAnswers["Final Quiz Q2"] === opt}
+                disabled={finalQuizSubmitted}
+
               />
               {opt}){" "}
               {
@@ -2594,6 +2641,8 @@ const ModulePage: React.FC<ModulePageProps> = ({ username }) => {
                 name="q3"
                 onChange={() => handleAnswerChange("Final Quiz Q3", opt)}
                 checked={quizAnswers["Final Quiz Q3"] === opt}
+                disabled={finalQuizSubmitted}
+
               />
               {opt}){" "}
               {
@@ -2627,6 +2676,8 @@ const ModulePage: React.FC<ModulePageProps> = ({ username }) => {
                 name="q4"
                 onChange={() => handleAnswerChange("Final Quiz Q4", opt)}
                 checked={quizAnswers["Final Quiz Q4"] === opt}
+                disabled={finalQuizSubmitted}
+
               />
               {opt}) {["100 Mbps", "1 Gbps", "10 Gbps", "100 Gbps"][i]}
             </label>
@@ -2652,6 +2703,8 @@ const ModulePage: React.FC<ModulePageProps> = ({ username }) => {
                 name="q5"
                 onChange={() => handleAnswerChange("Final Quiz Q5", opt)}
                 checked={quizAnswers["Final Quiz Q5"] === opt}
+                disabled={finalQuizSubmitted}
+
               />
               {opt}){" "}
               {["IP address", "MAC address", "Port number", "Subnet mask"][i]}
@@ -2678,6 +2731,8 @@ const ModulePage: React.FC<ModulePageProps> = ({ username }) => {
                 name="q6"
                 onChange={() => handleAnswerChange("Final Quiz Q6", opt)}
                 checked={quizAnswers["Final Quiz Q6"] === opt}
+                disabled={finalQuizSubmitted}
+
               />
               {opt}){" "}
               {
@@ -2711,6 +2766,8 @@ const ModulePage: React.FC<ModulePageProps> = ({ username }) => {
                 name="q7"
                 onChange={() => handleAnswerChange("Final Quiz Q7", opt)}
                 checked={quizAnswers["Final Quiz Q7"] === opt}
+                disabled={finalQuizSubmitted}
+
               />
               {opt}) {["Layer 1", "Layer 2", "Layer 3", "Layer 4"][i]}
             </label>
@@ -2736,6 +2793,8 @@ const ModulePage: React.FC<ModulePageProps> = ({ username }) => {
                 name="q8"
                 onChange={() => handleAnswerChange("Final Quiz Q8", opt)}
                 checked={quizAnswers["Final Quiz Q8"] === opt}
+                disabled={finalQuizSubmitted}
+
               />
               {opt}) {["Router", "Switch", "Firewall", "Modem"][i]}
             </label>
@@ -2761,6 +2820,8 @@ const ModulePage: React.FC<ModulePageProps> = ({ username }) => {
                 name="q9"
                 onChange={() => handleAnswerChange("Final Quiz Q9", opt)}
                 checked={quizAnswers["Final Quiz Q9"] === opt}
+                disabled={finalQuizSubmitted}
+
               />
               {opt}){" "}
               {
@@ -2797,6 +2858,8 @@ const ModulePage: React.FC<ModulePageProps> = ({ username }) => {
                 name="q10"
                 onChange={() => handleAnswerChange("Final Quiz Q10", opt)}
                 checked={quizAnswers["Final Quiz Q10"] === opt}
+                disabled={finalQuizSubmitted}
+
               />
               {opt}){" "}
               {
@@ -2852,14 +2915,14 @@ const ModulePage: React.FC<ModulePageProps> = ({ username }) => {
 
                 {/* ✅ Complete Button */}
                 <button
-                  onClick={() => {
-                    alert("🎉 Congratulations! You have completed the course!");
-                    window.location.href = "/home"; // Redirect to the home page
-                  }}
-                  className="complete-btn"
-                >
-                  Complete
-                </button>
+  onClick={() => {
+    setFinalQuizSubmitted(true);
+    markAsComplete("FINAL", "Final Quiz");
+  }}
+  className="complete-btn"
+>
+  View Certificate
+</button>
               </div>
             ) : (
               <div>
@@ -2884,7 +2947,97 @@ const ModulePage: React.FC<ModulePageProps> = ({ username }) => {
         )}
       </div>
     ),
-  };
+"Certificate": (
+  <div className="certificate-wrapper">
+    <div className="certificate-box" id="certificate-content">
+      <div className="certificate-border">
+        <div className="certificate-header">
+          <h1 className="cert-title">Certificate of Achievement</h1>
+          <div className="medal-container">🏅</div>
+          <p className="cert-subtitle">This Certificate is Proudly Presented To</p>
+        </div>
+
+        <div className="certificate-body">
+          <h2 className="cert-name">{localUsername}</h2>
+          
+          <p className="cert-text">
+            has successfully completed and demonstrated exceptional proficiency in the comprehensive course
+          </p>
+          
+          <h3 className="cert-course">IPv4 Addressing Mastery Program</h3>
+          
+          <p className="cert-description">
+            This intensive program covered all aspects of IPv4 addressing including subnetting, CIDR notation, 
+            address classes, private vs public addressing, NAT translation, and advanced network design principles. 
+            The participant has shown outstanding dedication and technical competence throughout the course duration.
+          </p>
+          
+          <div className="performance-section">
+            <div className="performance-item">
+              <span>Final Assessment Score:</span>
+              <span className="performance-value">{localStorage.getItem("finalQuizScore") || finalQuizScore}%</span>
+            </div>
+           
+            <div className="performance-item">
+              <span>Completion Date:</span>
+              <span className="performance-value">{new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div className="certificate-actions">
+      <button
+        onClick={() => {
+          alert("🎉 Congratulations on completing the IPv4 Mastery Program!");
+          window.location.href = "/";
+          markAsComplete("Certificate", "Certificate");
+        }}
+        className="cert-btn complete-btn"
+      >
+        ✅ Complete Course
+      </button>
+
+      <button
+        className="cert-btn download-btn"
+        onClick={() => {
+          const element = document.getElementById("certificate-content");
+          if (element) {
+            const options = {
+              margin: [0.5, 0.5],
+              filename: 'IPv4_Mastery_Certificate.pdf',
+              image: { type: 'jpeg', quality: 1 },
+              html2canvas: { 
+                scale: 3, 
+                useCORS: true,
+                scrollY: 0,
+                width: 794,
+                height: 1123,
+                windowWidth: 794
+              },
+              jsPDF: { 
+                unit: 'px', 
+                format: 'a4', 
+                orientation: 'portrait',
+                hotfixes: ['px_scaling']
+              },
+              pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
+            };
+            html2pdf().set(options).from(element).save();
+          } else {
+            alert("Certificate content not found.");
+          }
+        }}
+      >
+        📄 Download 
+      </button>
+    </div>
+  </div>
+)
+
+
+};
 
   return (
     <div>

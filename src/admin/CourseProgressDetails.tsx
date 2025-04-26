@@ -13,6 +13,7 @@ import {
   Cell,
   Legend,
 } from "recharts";
+import ContactPageIcon from '@mui/icons-material/ContactPage';
 
 type LoginEntry = {
   time: string;
@@ -131,10 +132,13 @@ const CourseProgressDetails: React.FC = () => {
       >
         <div
           style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
-          onClick={() => toggleExpand(userEmail)}
+          onClick={() => toggleExpand(userEmail)} 
         >
+          
           <div>
-            <h2 style={{ margin: 0, fontSize: 18, color: "#34495e" }}>{user.name || "Unnamed User"}</h2>
+            <h2 style={{ margin: 0, fontSize: 18, color: "#34495e" }}>          
+              <ContactPageIcon sx={{color:'primary'}} />
+            {user.name || "Unnamed User"}</h2>
             <p style={{ margin: "4px 0 0", color: "#7f8c8d", fontSize: 14 }}>{user.email || "No email"}</p>
           </div>
 
@@ -341,7 +345,7 @@ const CourseProgressDetails: React.FC = () => {
           boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
         }}
       >
-        <h1 style={{ textAlign: "center", color: "#2c3e50" }}>
+        <h1 style={{ textAlign: "center", color: "#2c3e50" }}> 
           {email ? `User Details: ${email}` : "All Users Course Progress"}
         </h1>
         {loading ? (
@@ -349,7 +353,7 @@ const CourseProgressDetails: React.FC = () => {
         ) : error ? (
           <p style={{ color: "red", textAlign: "center" }}>{error}</p>
         ) : email && user ? (
-          <UserDetailCard user={user} />
+           <UserDetailCard user={user} />
         ) : (
           users.map((user, index) => <UserDetailCard key={index} user={user} />)
         )}

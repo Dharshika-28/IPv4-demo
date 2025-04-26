@@ -1,6 +1,5 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Footer from './main/Footer.tsx';
 import Home from './pages/Home.tsx';
 import Login from './pages/Login.tsx';
 import Register from './pages/Register.tsx';
@@ -9,6 +8,8 @@ import AdminRegister from './admin/AdminRegister.tsx';
 import UserDetails from './admin/UserDetails.tsx';
 import ModulePage from './pages/Modulepage.tsx';
 import CourseProgressDetails from './admin/CourseProgressDetails.tsx';
+import ChangePassword from './pages/ChangePassword.tsx';
+import ResetPassword from './pages/ResetPassword.tsx';
 
 
 
@@ -28,9 +29,10 @@ const App: React.FC = () => {
           <Route path="/courseprogress" element={<CourseProgressDetails/>} />
           <Route path="/courseprogressdetails/:email" element={<CourseProgressDetails />} />
           <Route path="/modules" element={<ModulePage />} /> 
+          <Route path="/forgot-password" element={<ResetPassword />} />
+          <Route path="/change-password" element={<ChangePassword />} /> 
         </Routes>
       </main>
-      <Footer />
     </div>
   );
 };

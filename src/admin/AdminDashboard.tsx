@@ -21,8 +21,8 @@ type LoginEntry = {
 };
 
 type CourseProgress = {
-  module: string;
-  completed: boolean;
+  moduleName: string;
+  progressPercentage: number;
 };
 
 type User = {
@@ -40,13 +40,23 @@ const AdminDashboard: React.FC = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch(`http://localhost:8080/api/progress/All`)
+    fetch("http://localhost:8080/api/progress/All")
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch users");
         return res.json();
       })
       .then((data) => {
-        setUsers(data);
+        const cleanedData: User[] = data.map((user: any) => ({
+          name: user.name,
+          email: user.email,
+          loginHistory: user.loginHistory || [],
+          courseProgress: (user.courseProgress || []).map((progress: any) => ({
+            moduleName: progress.moduleName,
+            progressPercentage: progress.progressPercentage || 0,
+          })),
+        }));
+
+        setUsers(cleanedData);
         setLoading(false);
       })
       .catch((err) => {
@@ -55,40 +65,43 @@ const AdminDashboard: React.FC = () => {
       });
   }, []);
 
-  // Count users who have completed all modules (exclude users with zero modules)
-  const usersCompletedAll = users.filter(
-    (user) =>
-      user.courseProgress.length > 0 &&
-      user.courseProgress.every((module) => module.completed)
-  ).length;
+  // Get the last module update per user
+  const getLastProgress = (progressList: CourseProgress[]) => {
+    return progressList.length > 0
+      ? progressList[progressList.length - 1]
+      : null;
+  };
 
-  // Calculate average progress percentage across all users
+  // Count users who completed the last module with 100%
+  const usersCompletedAll = users.filter((user) => {
+    const lastProgress = getLastProgress(user.courseProgress);
+    return lastProgress && lastProgress.progressPercentage === 100;
+  }).length;
+
+  // Average of all users' last module progress
   const avgProgress = users.length
     ? users.reduce((sum, user) => {
-        const totalModules = user.courseProgress.length;
-        if (totalModules === 0) return sum;
-        const completedCount = user.courseProgress.filter((m) => m.completed).length;
-        return sum + (completedCount / totalModules) * 100;
+        const last = getLastProgress(user.courseProgress);
+        return sum + (last ? last.progressPercentage : 0);
       }, 0) / users.length
     : 0;
 
-  // Total number of user logins
-  const totalLogins = users.reduce((sum, user) => sum + user.loginHistory.length, 0);
+  const totalLogins = users.reduce(
+    (sum, user) => sum + user.loginHistory.length,
+    0
+  );
 
-  // Data for the pie chart (completion overview)
   const progressData = [
     { name: "Incomplete", value: users.length - usersCompletedAll },
-    { name: "Completed All", value: usersCompletedAll },
+    { name: "Completed Last Module", value: usersCompletedAll },
   ];
 
-  // Data for the bar chart (user progress percentages)
   const barChartData = users.map((user) => {
-    const totalModules = user.courseProgress.length;
-    if (totalModules === 0) return { name: user.name, progress: 0 };
-    const completedCount = user.courseProgress.filter((m) => m.completed).length;
+    const last = getLastProgress(user.courseProgress);
     return {
       name: user.name,
-      progress: (completedCount / totalModules) * 100,
+      module: last?.moduleName || "N/A",
+      progress: last?.progressPercentage || 0,
     };
   });
 
@@ -107,7 +120,7 @@ const AdminDashboard: React.FC = () => {
                 <p>{users.length}</p>
               </div>
               <div className="card">
-                <h2>Average Progress</h2>
+                <h2>Average Last Module Progress</h2>
                 <p>{avgProgress.toFixed(1)}%</p>
               </div>
               <div className="card">
@@ -115,19 +128,14 @@ const AdminDashboard: React.FC = () => {
                 <p>{totalLogins}</p>
               </div>
               <div className="card">
-                <h2>
-                  Completed All
-                  <hr />
-                  <br />
-                  IPv4 course
-                </h2>
+                <h2>Users Completed <hr/> All Module</h2>
                 <p>{usersCompletedAll}</p>
               </div>
             </div>
 
             <div className="charts">
               <div className="chart-box">
-                <h3>Completion Overview</h3>
+                <h3>Last Module Completion Overview</h3>
                 <ResponsiveContainer width="100%" height={250}>
                   <PieChart>
                     <Pie
@@ -138,19 +146,32 @@ const AdminDashboard: React.FC = () => {
                       label
                     >
                       {progressData.map((entry, index) => (
-                        <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                        <Cell
+                          key={index}
+                          fill={COLORS[index % COLORS.length]}
+                        />
                       ))}
                     </Pie>
                   </PieChart>
                 </ResponsiveContainer>
               </div>
               <div className="chart-box">
-                <h3>User Progress</h3>
+                <h3>User Last Module Progress</h3>
                 <ResponsiveContainer width="100%" height={250}>
                   <BarChart data={barChartData}>
                     <XAxis dataKey="name" />
                     <YAxis />
-                    <Tooltip />
+                    <Tooltip
+                      formatter={(value: any, name: any, props: any) => [
+                        `${value}%`,
+                        "Progress",
+                      ]}
+                      labelFormatter={(label) =>
+                        `User: ${label} - ${barChartData.find(
+                          (u) => u.name === label
+                        )?.module}`
+                      }
+                    />
                     <Bar dataKey="progress" fill="#007bff" />
                   </BarChart>
                 </ResponsiveContainer>

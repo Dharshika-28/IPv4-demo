@@ -14,6 +14,7 @@
     "@testing-library/user-event": "^13.5.0",
     "autoprefixer": "^10.4.21",
     "axios": "^1.8.4",
+    "html2pdf.js": "^0.10.3",
     "lucide-react": "^0.503.0",
     "postcss": "^8.5.3",
     "react": "^19.1.0",

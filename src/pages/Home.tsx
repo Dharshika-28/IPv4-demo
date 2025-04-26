@@ -4,7 +4,7 @@
 import React from 'react';
 import '../css/Home.css'; // 👈 Import CSS here
 import Navbar from '../main/Navbar.tsx'; // No need to add .tsx
-import ModulePage from './Modulepage.tsx';
+import Footer from '../main/Footer.tsx';
 
 const Home = () => {
   return (
@@ -80,6 +80,7 @@ const Home = () => {
          
         </div>
       </section>
+      <Footer />
     </div>
   );
 };
