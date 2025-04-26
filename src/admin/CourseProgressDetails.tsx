@@ -13,7 +13,8 @@ import {
   Cell,
   Legend,
 } from "recharts";
-import ContactPageIcon from '@mui/icons-material/ContactPage';
+import ContactPageIcon from "@mui/icons-material/ContactPage";
+import Certificate from "../pages/Certificate.tsx";
 
 type LoginEntry = {
   time: string;
@@ -42,9 +43,8 @@ type User = {
   courseProgress?: SectionProgress[];
 };
 
-
 const BAR_COLORS = ["#27ae60", "#e74c3c"]; // Green for completed, Red for incomplete
-const PIE_COLORS = ["lightblue", "lightgreen", "purple", "lavender"]; 
+const PIE_COLORS = ["#f1c40f", "#f39c12", "#d35400", "#7d3c98"]; // Yellow to purple gradient for progress ranges
 
 const CourseProgressDetails: React.FC = () => {
   const { email } = useParams<{ email: string }>();
@@ -56,15 +56,24 @@ const CourseProgressDetails: React.FC = () => {
   const [quizScores, setQuizScores] = useState<QuizScore[]>([]);
   const [quizLoading, setQuizLoading] = useState(false);
   const [quizError, setQuizError] = useState("");
+  const [showCertificate, setShowCertificate] = useState(false);
+  const [quizScore, setQuizScore] = useState<number | null>(null);
 
   useEffect(() => {
     setLoading(true);
     setError("");
 
     if (email) {
-      fetch(`http://localhost:8080/api/progress/details/${encodeURIComponent(email)}`)
+      fetch(
+        `http://localhost:8080/api/progress/details/${encodeURIComponent(
+          email
+        )}`
+      )
         .then((res) => {
-          if (!res.ok) throw new Error(`Failed to fetch user: ${res.status} ${res.statusText}`);
+          if (!res.ok)
+            throw new Error(
+              `Failed to fetch user: ${res.status} ${res.statusText}`
+            );
           return res.json();
         })
         .then((data) => {
@@ -80,7 +89,10 @@ const CourseProgressDetails: React.FC = () => {
     } else {
       fetch(`http://localhost:8080/api/progress/All`)
         .then((res) => {
-          if (!res.ok) throw new Error(`Failed to fetch users: ${res.status} ${res.statusText}`);
+          if (!res.ok)
+            throw new Error(
+              `Failed to fetch users: ${res.status} ${res.statusText}`
+            );
           return res.json();
         })
         .then((data: User[]) => {
@@ -97,23 +109,30 @@ const CourseProgressDetails: React.FC = () => {
   const fetchQuizScores = (userEmail: string) => {
     setQuizLoading(true);
     setQuizError("");
-  
-    fetch(`http://localhost:8080/api/progress/final-quiz/score/${encodeURIComponent(userEmail)}`)
+
+    fetch(
+      `http://localhost:8080/api/progress/final-quiz/score/${encodeURIComponent(
+        userEmail
+      )}`
+    )
       .then((res) => {
-        if (!res.ok) throw new Error(`Failed to fetch quiz scores: ${res.status}`);
+        if (!res.ok)
+          throw new Error(`Failed to fetch quiz scores: ${res.status}`);
         return res.json(); // Just a number
       })
       .then((score: number) => {
         console.log("Fetched score:", score); // Debug log
-  
+        setQuizScore(score); // ✅ Save directly here
+
+        // (Optional) If you still want the fake quiz data for a table, you can also set it separately
         const fakeQuiz = {
-          quizName: "Final IPv4 Quiz",   
-          score: score,                  
-          totalQuestions: 10,            
-          dateTaken: new Date().toISOString(), 
+          quizName: "Final IPv4 Quiz",
+          score: score,
+          totalQuestions: 10,
+          dateTaken: new Date().toISOString(),
         };
-  
-        setQuizScores([fakeQuiz]); // Important: Wrap it in an array []
+
+        setQuizScores([fakeQuiz]);
         setQuizLoading(false);
       })
       .catch((err) => {
@@ -123,9 +142,6 @@ const CourseProgressDetails: React.FC = () => {
       });
   };
 
-
-    
-
   const getHighestProgress = (progress: SectionProgress[] = []) => {
     if (progress.length === 0) return 0;
     return Math.max(...progress.map((p) => p.progressPercentage));
@@ -133,11 +149,13 @@ const CourseProgressDetails: React.FC = () => {
 
   const toggleExpand = (userEmail: string) => {
     setExpandedEmails((prev) =>
-      prev.includes(userEmail) ? prev.filter((e) => e !== userEmail) : [...prev, userEmail]
+      prev.includes(userEmail)
+        ? prev.filter((e) => e !== userEmail)
+        : [...prev, userEmail]
     );
     // Fetch quiz scores when expanding a user card
     if (!expandedEmails.includes(userEmail)) {
-      const userToExpand = users.find(u => u.email === userEmail) || user;
+      const userToExpand = users.find((u) => u.email === userEmail) || user;
       if (userToExpand?.email) {
         fetchQuizScores(userToExpand.email);
       }
@@ -195,8 +213,12 @@ const CourseProgressDetails: React.FC = () => {
       ? user.courseProgress ?? []
       : (user.courseProgress ?? []).slice(0, MAX_ROWS);
 
-    const moduleCompletionData = getModuleCompletionData(user.courseProgress ?? []);
-    const progressDistributionData = getProgressDistributionData(user.courseProgress ?? []);
+    const moduleCompletionData = getModuleCompletionData(
+      user.courseProgress ?? []
+    );
+    const progressDistributionData = getProgressDistributionData(
+      user.courseProgress ?? []
+    );
 
     return (
       <div
@@ -211,15 +233,30 @@ const CourseProgressDetails: React.FC = () => {
         }}
       >
         <div
-          style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
           onClick={() => toggleExpand(userEmail)}
         >
           <div>
-            <h2 style={{ margin: 0, fontSize: 18, color: "#34495e", display: "flex", alignItems: "center", gap: 8 }}>
+            <h2
+              style={{
+                margin: 0,
+                fontSize: 18,
+                color: "#34495e",
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+              }}
+            >
               <ContactPageIcon sx={{ color: "primary" }} />
               {user.name || "Unnamed User"}
             </h2>
-            <p style={{ margin: "4px 0 0", color: "#7f8c8d", fontSize: 14 }}>{user.email || "No email"}</p>
+            <p style={{ margin: "4px 0 0", color: "#7f8c8d", fontSize: 14 }}>
+              {user.email || "No email"}
+            </p>
           </div>
 
           <div style={{ flex: 1, marginLeft: 20 }}>
@@ -237,13 +274,23 @@ const CourseProgressDetails: React.FC = () => {
                   width: `${getHighestProgress(user.courseProgress ?? [])}%`,
                   height: "100%",
                   backgroundColor:
-                    getHighestProgress(user.courseProgress ?? []) === 100 ? "#27ae60" : "#2980b9",
+                    getHighestProgress(user.courseProgress ?? []) === 100
+                      ? "#27ae60"
+                      : "#2980b9",
                   transition: "width 0.5s ease-in-out",
                 }}
               ></div>
             </div>
-            <p style={{ margin: "6px 0 0", fontSize: 14, color: "#34495e", fontWeight: "600" }}>
-              Progress: {getHighestProgress(user.courseProgress ?? [])?.toFixed(1)}%
+            <p
+              style={{
+                margin: "6px 0 0",
+                fontSize: 14,
+                color: "#34495e",
+                fontWeight: "600",
+              }}
+            >
+              Progress:{" "}
+              {getHighestProgress(user.courseProgress ?? [])?.toFixed(1)}%
             </p>
           </div>
 
@@ -278,16 +325,21 @@ const CourseProgressDetails: React.FC = () => {
             >
               {/* Final Quiz Section */}
               <div style={{ minWidth: 350 }}>
-                <h3 style={{ marginBottom: 12, color: "black" }}>Final Quiz Score</h3>
+                <h3 style={{ marginBottom: 12, color: "black" }}>
+                  Final Quiz Score
+                </h3>
                 {quizLoading ? (
                   <p>Loading quiz scores...</p>
                 ) : quizError ? (
-                  <p style={{ color: "grey" }}> No final quiz data available.</p>
+                  <p style={{ color: "white" }}>
+                    {" "}
+                    No final quiz data available.
+                  </p>
                 ) : quizScores.length > 0 ? (
                   <table style={{ width: "100%", borderCollapse: "collapse" }}>
                     <thead>
                       <tr>
-                        {["Quiz Name", "Score", "Date Taken"].map((header) => (
+                        {["Quiz Name", "Score"].map((header) => (
                           <th
                             key={header}
                             style={{
@@ -310,15 +362,13 @@ const CourseProgressDetails: React.FC = () => {
                         <tr
                           key={`${quiz.quizName}-${idx}`}
                           style={{
-                            backgroundColor: idx % 2 === 0 ? "#f9f9f9" : "white",
+                            backgroundColor:
+                              idx % 2 === 0 ? "#f9f9f9" : "white",
                           }}
                         >
                           <td style={{ padding: "8px" }}>{quiz.quizName}</td>
                           <td style={{ padding: "8px" }}>
-                            {(quiz.score).toFixed(1)}%
-                          </td>
-                          <td style={{ padding: "8px" }}>
-                            {new Date(quiz.dateTaken).toLocaleDateString()}
+                            {quiz.score.toFixed(1)}%
                           </td>
                         </tr>
                       ))}
@@ -333,27 +383,31 @@ const CourseProgressDetails: React.FC = () => {
 
               {/* Login History Table */}
               <div style={{ flex: "1 1 300px", minWidth: 280 }}>
-                <h3 style={{ marginBottom: 12, color: "black" }}>Login History</h3>
+                <h3 style={{ marginBottom: 12, color: "black" }}>
+                  Login History
+                </h3>
                 {user.loginHistory?.length ? (
                   <table style={{ width: "100%", borderCollapse: "collapse" }}>
                     <thead>
                       <tr>
-                        {["Date", "Time", "IP Address", "Location"].map((header) => (
-                          <th
-                            key={header}
-                            style={{
-                              textAlign: "left",
-                              padding: "8px",
-                              backgroundColor: "#ecf0f1",
-                              borderBottom: "2px solid #bdc3c7",
-                              fontWeight: "600",
-                              fontSize: 14,
-                              color: "black",
-                            }}
-                          >
-                            {header}
-                          </th>
-                        ))}
+                        {["Date", "Time", "IP Address", "Location"].map(
+                          (header) => (
+                            <th
+                              key={header}
+                              style={{
+                                textAlign: "left",
+                                padding: "8px",
+                                backgroundColor: "#ecf0f1",
+                                borderBottom: "2px solid #bdc3c7",
+                                fontWeight: "600",
+                                fontSize: 14,
+                                color: "black",
+                              }}
+                            >
+                              {header}
+                            </th>
+                          )
+                        )}
                       </tr>
                     </thead>
                     <tbody>
@@ -365,7 +419,8 @@ const CourseProgressDetails: React.FC = () => {
                           <tr
                             key={`${time}-${ip}-${idx}`}
                             style={{
-                              backgroundColor: idx % 2 === 0 ? "#f9f9f9" : "white",
+                              backgroundColor:
+                                idx % 2 === 0 ? "#f9f9f9" : "white",
                             }}
                           >
                             <td style={{ padding: "8px" }}>{date}</td>
@@ -384,37 +439,52 @@ const CourseProgressDetails: React.FC = () => {
 
               {/* Course Progress Table */}
               <div style={{ flex: "1 1 380px", minWidth: 320 }}>
-                <h3 style={{ marginBottom: 12, color: "black" }}>Course Progress</h3>
+                <h3 style={{ marginBottom: 12, color: "black" }}>
+                  Course Progress
+                </h3>
                 {user.courseProgress?.length ? (
                   <>
-                    <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                    <table
+                      style={{ width: "100%", borderCollapse: "collapse" }}
+                    >
                       <thead>
                         <tr>
-                          {["Module", "Section", "Completed", "Progress %"].map((header) => (
-                            <th
-                              key={header}
-                              style={{
-                                textAlign: "left",
-                                padding: "8px",
-                                backgroundColor: "#ecf0f1",
-                                borderBottom: "2px solid #bdc3c7",
-                                fontWeight: "600",
-                                fontSize: 14,
-                                color: "black",
-                              }}
-                            >
-                              {header}
-                            </th>
-                          ))}
+                          {["Module", "Section", "Completed", "Progress %"].map(
+                            (header) => (
+                              <th
+                                key={header}
+                                style={{
+                                  textAlign: "left",
+                                  padding: "8px",
+                                  backgroundColor: "#ecf0f1",
+                                  borderBottom: "2px solid #bdc3c7",
+                                  fontWeight: "600",
+                                  fontSize: 14,
+                                  color: "black",
+                                }}
+                              >
+                                {header}
+                              </th>
+                            )
+                          )}
                         </tr>
                       </thead>
                       <tbody>
                         {courseProgressToShow.map(
-                          ({ moduleName, sectionName, completed, progressPercentage }, idx) => (
+                          (
+                            {
+                              moduleName,
+                              sectionName,
+                              completed,
+                              progressPercentage,
+                            },
+                            idx
+                          ) => (
                             <tr
                               key={`${moduleName}-${sectionName}-${idx}`}
                               style={{
-                                backgroundColor: idx % 2 === 0 ? "#f9f9f9" : "white",
+                                backgroundColor:
+                                  idx % 2 === 0 ? "#f9f9f9" : "white",
                               }}
                             >
                               <td style={{ padding: "8px" }}>{moduleName}</td>
@@ -445,7 +515,9 @@ const CourseProgressDetails: React.FC = () => {
                           fontSize: 14,
                         }}
                       >
-                        {showAllSections ? "Show Less" : `Show All (${user.courseProgress.length})`}
+                        {showAllSections
+                          ? "Show Less"
+                          : `Show All (${user.courseProgress.length})`}
                       </button>
                     )}
                   </>
@@ -453,6 +525,77 @@ const CourseProgressDetails: React.FC = () => {
                   <p>No course progress data available.</p>
                 )}
               </div>
+            </div>
+
+            {/* Certificate */}
+            <div style={{ marginTop: 32, width: "100%" }}>
+              <h3 style={{ marginBottom: 12, color: "black" }}>Certificate</h3>
+              {getHighestProgress(user.courseProgress ?? []) === 100 ? (
+                <>
+                  <div style={{ display: "flex", gap: 10, marginBottom: 16 }}>
+                    <button
+                      style={{
+                        padding: "8px 16px",
+                        backgroundColor: "#3498db",
+                        color: "white",
+                        border: "none",
+                        borderRadius: 5,
+                        cursor: "pointer",
+                        fontWeight: "bold",
+                        fontSize: 14,
+                      }}
+                      onClick={() => setShowCertificate(!showCertificate)}
+                    >
+                      {showCertificate
+                        ? "Hide Certificate"
+                        : "Show Certificate"}
+                    </button>
+                    {showCertificate && (
+                      <button
+                        style={{
+                          padding: "8px 16px",
+                          backgroundColor: "#27ae60",
+                          color: "white",
+                          border: "none",
+                          borderRadius: 5,
+                          cursor: "pointer",
+                          fontWeight: "bold",
+                          fontSize: 14,
+                        }}
+                        onClick={() => {
+                          const downloadBtn = document.querySelector(
+                            ".download-btn"
+                          ) as HTMLElement;
+                          if (downloadBtn) downloadBtn.click();
+                        }}
+                      >
+                        Download Certificate
+                      </button>
+                    )}
+                  </div>
+                  {showCertificate && (
+                    <div
+                      style={{
+                        border: "1px solid #ddd",
+                        padding: 20,
+                        borderRadius: 8,
+                        backgroundColor: "#f9f9f9",
+                      }}
+                    >
+                      <Certificate
+                        localUsername={user.name || "User"}
+                        finalQuizScore={quizScore || 100}
+                        markAsComplete={() => {}} // Empty function since this is admin view
+                      />
+                    </div>
+                  )}
+                </>
+              ) : (
+                <p style={{ color: "#7f8c8d", fontStyle: "italic" }}>
+                  Certificate not available - user hasn't completed the course
+                  yet.
+                </p>
+              )}
             </div>
 
             {/* Charts */}
@@ -467,7 +610,13 @@ const CourseProgressDetails: React.FC = () => {
             >
               {/* Bar Chart: Completed vs Incomplete per Module */}
               <div style={{ flex: "1 1 400px", minWidth: 320, height: 300 }}>
-                <h3 style={{ marginBottom: 12, textAlign: "center", color: "black" }}>
+                <h3
+                  style={{
+                    marginBottom: 12,
+                    textAlign: "center",
+                    color: "black",
+                  }}
+                >
                   Module Completion Overview
                 </h3>
                 {moduleCompletionData.length ? (
@@ -491,18 +640,34 @@ const CourseProgressDetails: React.FC = () => {
                         formatter={(value: number) => value}
                         cursor={{ fill: "rgba(0, 0, 0, 0.1)" }}
                       />
-                      <Bar dataKey="completed" fill={BAR_COLORS[0]} stackId="a" />
-                      <Bar dataKey="incomplete" fill={BAR_COLORS[1]} stackId="a" />
+                      <Bar
+                        dataKey="completed"
+                        fill={BAR_COLORS[0]}
+                        stackId="a"
+                      />
+                      <Bar
+                        dataKey="incomplete"
+                        fill={BAR_COLORS[1]}
+                        stackId="a"
+                      />
                     </BarChart>
                   </ResponsiveContainer>
                 ) : (
-                  <p style={{ textAlign: "center", color: "#7f8c8d" }}>No module completion data.</p>
+                  <p style={{ textAlign: "center", color: "#7f8c8d" }}>
+                    No module completion data.
+                  </p>
                 )}
               </div>
 
               {/* Pie Chart: Progress Distribution */}
               <div style={{ flex: "1 1 300px", minWidth: 280, height: 300 }}>
-                <h3 style={{ marginBottom: 12, textAlign: "center", color: "black" }}>
+                <h3
+                  style={{
+                    marginBottom: 12,
+                    textAlign: "center",
+                    color: "black",
+                  }}
+                >
                   Progress Distribution
                 </h3>
                 {progressDistributionData.some((d) => d.value > 0) ? (
@@ -521,7 +686,10 @@ const CourseProgressDetails: React.FC = () => {
                         }
                       >
                         {progressDistributionData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                          <Cell
+                            key={`cell-${index}`}
+                            fill={PIE_COLORS[index % PIE_COLORS.length]}
+                          />
                         ))}
                       </Pie>
                       <Legend verticalAlign="bottom" height={36} />
@@ -543,16 +711,13 @@ const CourseProgressDetails: React.FC = () => {
 
   return (
     <>
-      <main
-        style={{
-          backgroundColor:"white",
-          color:'black',
-        }}
-      >
-        <MenuBar />
-
+    <div style={{width:"100vw",backgroundColor:"white",height:"100vh" }}>
+      <main style={{ backgroundColor: "white", color: "black" }}>
+      <MenuBar />
         <h1 style={{ color: "#34495e", textAlign: "center" }}>
-          Course Progress Details
+          {user?.name
+            ? `Course Progress Details for ${user.name}`
+            : "Course Progress Details"}
         </h1>
 
         {loading && <p>Loading data...</p>}
@@ -577,6 +742,7 @@ const CourseProgressDetails: React.FC = () => {
           </>
         )}
       </main>
+      </div>
     </>
   );
 };

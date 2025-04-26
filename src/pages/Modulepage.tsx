@@ -112,6 +112,7 @@ const ModulePage: React.FC<ModulePageProps> = ({ username }) => {
   
         if (!Array.isArray(response.data)) {
           throw new Error("Progress data is not an array");
+
         }
   
         const userProgress = response.data;
@@ -495,7 +496,7 @@ try {
     throw new Error("Username not found in localStorage");
   }
 
-    if (percent > 60) {  // <-- Only send if score is above 60
+    if (percent >= 60) {  // <-- Only send if score is above 60
       await fetch('http://localhost:8080/api/progress/final-quiz', {
         method: "POST",
         headers: {
@@ -2444,7 +2445,7 @@ try {
                   name="q9"
                   onChange={() => handleAnswerChange("Module 3 Q9", opt)}
                   checked={quizAnswers["Module 3 Q9"] === opt}
-                  disabled={module32QuizSubmitted}
+                  disabled={quizAnswers["Module 3 Q9"] !== undefined}
                 />
                 {opt}){" "}
                 {
@@ -2478,7 +2479,7 @@ try {
                   name="q10"
                   onChange={() => handleAnswerChange("Module 3 Q10", opt)}
                   checked={quizAnswers["Module 3 Q10"] === opt}
-                  disabled={module32QuizSubmitted}
+                  disabled={quizAnswers["Module 3 Q10"] !== undefined}
                 />
                 {opt}) {["TCP", "Unicast", "ICMP", "Ping"][i]}
               </label>
@@ -2579,7 +2580,7 @@ try {
                 name="q1"
                 onChange={() => handleAnswerChange("Final Quiz Q1", opt)}
                 checked={quizAnswers["Final Quiz Q1"] === opt}
-                disabled={finalQuizSubmitted}
+                disabled={quizAnswers["Final Quiz Q1"] !== undefined}
 
               />
               {opt}) {["16 bits", "32 bits", "64 bits"][i]}
@@ -2606,7 +2607,7 @@ try {
                 name="q2"
                 onChange={() => handleAnswerChange("Final Quiz Q2", opt)}
                 checked={quizAnswers["Final Quiz Q2"] === opt}
-                disabled={finalQuizSubmitted}
+                disabled={quizAnswers["Final Quiz Q2"] !== undefined}
 
               />
               {opt}){" "}
@@ -2641,7 +2642,7 @@ try {
                 name="q3"
                 onChange={() => handleAnswerChange("Final Quiz Q3", opt)}
                 checked={quizAnswers["Final Quiz Q3"] === opt}
-                disabled={finalQuizSubmitted}
+                disabled={quizAnswers["Final Quiz Q3"] !== undefined}
 
               />
               {opt}){" "}
@@ -2676,7 +2677,7 @@ try {
                 name="q4"
                 onChange={() => handleAnswerChange("Final Quiz Q4", opt)}
                 checked={quizAnswers["Final Quiz Q4"] === opt}
-                disabled={finalQuizSubmitted}
+                disabled={quizAnswers["Final Quiz Q4"] !== undefined}
 
               />
               {opt}) {["100 Mbps", "1 Gbps", "10 Gbps", "100 Gbps"][i]}
@@ -2703,7 +2704,7 @@ try {
                 name="q5"
                 onChange={() => handleAnswerChange("Final Quiz Q5", opt)}
                 checked={quizAnswers["Final Quiz Q5"] === opt}
-                disabled={finalQuizSubmitted}
+                disabled={quizAnswers["Final Quiz Q5"] !== undefined}
 
               />
               {opt}){" "}
@@ -2731,7 +2732,7 @@ try {
                 name="q6"
                 onChange={() => handleAnswerChange("Final Quiz Q6", opt)}
                 checked={quizAnswers["Final Quiz Q6"] === opt}
-                disabled={finalQuizSubmitted}
+                disabled={quizAnswers["Final Quiz Q6"] !== undefined}
 
               />
               {opt}){" "}
@@ -2766,7 +2767,7 @@ try {
                 name="q7"
                 onChange={() => handleAnswerChange("Final Quiz Q7", opt)}
                 checked={quizAnswers["Final Quiz Q7"] === opt}
-                disabled={finalQuizSubmitted}
+                disabled={quizAnswers["Final Quiz Q7"] !== undefined}
 
               />
               {opt}) {["Layer 1", "Layer 2", "Layer 3", "Layer 4"][i]}
@@ -2793,7 +2794,7 @@ try {
                 name="q8"
                 onChange={() => handleAnswerChange("Final Quiz Q8", opt)}
                 checked={quizAnswers["Final Quiz Q8"] === opt}
-                disabled={finalQuizSubmitted}
+                disabled={quizAnswers["Final Quiz Q8"] !== undefined}
 
               />
               {opt}) {["Router", "Switch", "Firewall", "Modem"][i]}
@@ -2820,7 +2821,7 @@ try {
                 name="q9"
                 onChange={() => handleAnswerChange("Final Quiz Q9", opt)}
                 checked={quizAnswers["Final Quiz Q9"] === opt}
-                disabled={finalQuizSubmitted}
+                disabled={quizAnswers["Final Quiz Q9"] !== undefined}
 
               />
               {opt}){" "}
@@ -2858,7 +2859,7 @@ try {
                 name="q10"
                 onChange={() => handleAnswerChange("Final Quiz Q10", opt)}
                 checked={quizAnswers["Final Quiz Q10"] === opt}
-                disabled={finalQuizSubmitted}
+                disabled={quizAnswers["Final Quiz Q10"] !== undefined}
 
               />
               {opt}){" "}

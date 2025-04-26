@@ -4,7 +4,7 @@ import Avatar from '@mui/material/Avatar';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import ProfileLogout from '../styles/ProfileLogout.tsx';
+import ProfileLogout from "../styles/ProfileLogout.tsx"
 
 interface ProfileSummaryProps {
   userName: string;
@@ -34,23 +34,25 @@ const ProfileSummary: React.FC<ProfileSummaryProps> = ({
       {/* Avatar */}
       <div className="avatar-container">
         <Avatar alt={userName} src={profilePic} sx={{ width: 80, height: 80 }} />
+      <Typography variant="h6" >
+        {userName}
+      </Typography>
+      
       </div>
 
       {/* Center Details */}
       <div className="details-container">
-        <Typography variant="h6" style={{ color: 'white' }}>
-          {userName}
-        </Typography>
-        <Typography style={{ color: 'white' }}>
+        
+        <Typography >
           <strong>Course:</strong> CCNA IPv4 Addressing
         </Typography>
-        <Typography style={{ color: 'white' }}>
+        <Typography >
           <strong>Sections Completed:</strong> {completedSections} / {totalSections}
         </Typography>
-        <Typography style={{ color: 'white' }}>
+        <Typography >
           <strong>Last Completed:</strong> {lastSection}
         </Typography>
-        <Typography style={{ color: 'white' }}>
+        <Typography>
           <strong>Badge:</strong> {getBadge(progress)}
         </Typography>
       </div>
@@ -75,17 +77,17 @@ const ProfileSummary: React.FC<ProfileSummaryProps> = ({
             alignItems="center"
             justifyContent="center"
           >
-            
-            <Typography variant="caption" style={{ color: 'white' }}>
+            <Typography variant="caption" >
               {`${progress}%`}
             </Typography>
+            
           </Box>
         </Box>
-
-        <ProfileLogout />
-
       </div>
+
+      <ProfileLogout />
     </div>
   );
 };
+
 export default ProfileSummary;
