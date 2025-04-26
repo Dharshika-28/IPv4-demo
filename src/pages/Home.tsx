@@ -5,6 +5,7 @@ import React from 'react';
 import '../css/Home.css'; // 👈 Import CSS here
 import Navbar from '../main/Navbar.tsx'; // No need to add .tsx
 import Footer from '../main/Footer.tsx';
+import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 
 const Home = () => {
   return (
@@ -42,36 +43,42 @@ const Home = () => {
         {/* <p className="features-para">Everything you need to master IPv4 addressing concepts for your CCNA certification</p> */}
         <div className="feature-cards">
           <div className="feature-card">
+          <AutoStoriesIcon />
             <h3 className="feature-card-title">Interactive Quizzes</h3>
             <p className="feature-card-desc">
               Test your knowledge with interactive quizzes and track your progress.
             </p>
           </div>
           <div className="feature-card">
+          <AutoStoriesIcon />
             <h3 className="feature-card-title">Comprehensive Content </h3>
             <p className="feature-card-desc">
               Cover all essential Ipv4 topic including subnetting, CIDR, VLSM and route Summarization.
             </p>
           </div>
           <div className="feature-card">
+          <AutoStoriesIcon />
             <h3 className="feature-card-title">Self-paced Modules</h3>
             <p className="feature-card-desc">
               Learn at your own pace with structured modules that fit your schedule and clear learning objectices.
             </p>
           </div>
           <div className="feature-card">
+          <AutoStoriesIcon />
             <h3 className="feature-card-title">Practice Exercises</h3>
             <p className="feature-card-desc">
               Reinforce your learning with hands-on exercises, real-world scenarios and quizzes.
             </p>
           </div>
           <div className="feature-card">
+          <AutoStoriesIcon />
             <h3 className="feature-card-title">Progress Tracking </h3>
             <p className="feature-card-desc">
               Monitor your progress and identify areas for improvement with detailed analytics.
             </p>
           </div>
           <div className="feature-card">
+          <AutoStoriesIcon />
             <h3 className="feature-card-title">CCNA Aligned</h3>
             <p className="feature-card-desc">
               Content is aligned with CCNA certification objectives, ensuring you are well-prepared for the exam.

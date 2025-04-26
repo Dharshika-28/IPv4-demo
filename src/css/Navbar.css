@@ -58,3 +58,17 @@
     background-color: #03060e;
   }
   
+ /* Admin button */
+  .navbar-admin {
+    background-color: #3b3b3f; 
+    color: white;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+  }
+  
+  .navbar-admin:hover {
+    background-color: #57585a;
+  }

@@ -15,6 +15,10 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import Drawers from './Drawer.tsx';
 import { Link } from 'react-router-dom';
+import SpaceDashboardIcon from '@mui/icons-material/SpaceDashboard';
+import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+
+
 
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
@@ -155,17 +159,17 @@ export default function MenuBar() {
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={4} color="error">
-                <MailIcon />
-              </Badge>
+              {/* <Badge badgeContent={4} color="error"> */}
+              <Link to="/admindashboard" style={{color:'white'}}> <SpaceDashboardIcon /></Link>
+              {/* </Badge> */}
             </IconButton>
             <IconButton
               size="large"
               aria-label="show 17 new notifications"
               color="inherit"
             >
-              <Badge badgeContent={17} color="error">
-                <NotificationsIcon />
+              <Badge badgeContent={"+"} color="error">
+              <Link to="/courseprogress" style={{color:'white'}}>  <LibraryBooksIcon /></Link>
               </Badge>
             </IconButton>
             <IconButton
