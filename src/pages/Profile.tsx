@@ -34,8 +34,9 @@ const ProfileSummary: React.FC<ProfileSummaryProps> = ({
       {/* Avatar */}
       <div className="avatar-container">
         <Avatar alt={userName} src={profilePic} sx={{ width: 80, height: 80 }} />
-      <Typography variant="h6" >
-        {userName}
+        
+      <Typography variant="h6" sx={{color:'green'}}>
+       <strong> {userName} </strong>
       </Typography>
       
       </div>

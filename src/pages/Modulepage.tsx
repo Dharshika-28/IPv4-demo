@@ -4,7 +4,9 @@ import { FaCheckCircle, FaRegCircle } from "react-icons/fa";
 import ProfileSummary from "../pages/Profile.tsx";
 import axios from "axios";
 import html2pdf from "html2pdf.js";
-
+import SchoolIcon from '@mui/icons-material/School';
+import StarsIcon from '@mui/icons-material/Stars';
+import TipsAndUpdatesIcon from '@mui/icons-material/TipsAndUpdates';
 
 interface ModulePageProps {
   username: string;
@@ -728,7 +730,7 @@ try {
   const moduleContents: Record<string, JSX.Element> = {
     "Section 1: What is IPv4?": (
       <div className="module-content">
-        <h3>What is IPv4</h3>
+        <h3>What is IPv4 ?</h3>
         <p> Hey there! Let’s start with the basics.</p>
         <p>IPv4 stands for Internet Protocol version 4.</p>
         <p>
@@ -3043,7 +3045,7 @@ try {
   return (
     <div>
       <ProfileSummary
-        userName={username}
+        userName={localUsername}
         profilePic={""}
         totalSections={Object.values(modules).flat().length}
         completedSections={
@@ -3103,7 +3105,7 @@ try {
               moduleContents[activeModule] || <p>Content not available.</p>
             ) : (
               <>
-                <p>🎉 Welcome to the IPv4 Addressing for CCNA Course! 🎉</p>
+                <h1><SchoolIcon /> Welcome to the IPv4 Addressing for CCNA Course! </h1>
                 <p>
                   Get ready to dive into one of the most fundamental and crucial
                   concepts in networking! Whether you're starting your CCNA
@@ -3115,9 +3117,10 @@ try {
                   In this course, you'll unlock the secrets of how data travels
                   across networks, understand the structure of IP addresses, and
                   gain the confidence to design and troubleshoot networks with
-                  ease. 🌐
+                  ease. 
                 </p>
-                <p>🚀 What you will achieve:</p>
+                <br />
+                <h2><StarsIcon sx={{color:'purple'}}/> What you will achieve:</h2>
                 <ul>
                   <li>
                     Grasp the core concepts of IP addressing and subnetting.
@@ -3134,11 +3137,11 @@ try {
                 <p>
                   Remember, each challenge is an opportunity to grow. Stay
                   curious, practice relentlessly, and don’t hesitate to ask
-                  questions. You've got this! 💡
+                  questions. You've got this! <TipsAndUpdatesIcon  sx={{fontSize:'20px'}}/>
                 </p>
                 <p>
                   Let’s get started, and together we’ll take your networking
-                  skills to the next level! 💻🌟
+                  skills to the next level! 
                 </p>
               </>
             )}
